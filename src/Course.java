@@ -14,9 +14,10 @@ public class Course {
     }
 
     public void enroll(Student student) {
-        /* Add the student to the list of enrolled students
+        /*
+         * Add the student to the list of enrolled students
          * 
-         * Here we can do some check if the student is already enrolled, 
+         * Here we can do some check if the student is already enrolled,
          * or if they satisfy some criteria for enrollment
          */
         if (enrolledStudents.contains(student)) {
@@ -27,7 +28,7 @@ public class Course {
     }
 
     public void removeStudent(Student student) {
-        if(!enrolledStudents.contains(student)) {
+        if (!enrolledStudents.contains(student)) {
             return;
         }
         enrolledStudents.remove(student);
@@ -36,7 +37,7 @@ public class Course {
 
     public void addTeacher(Teacher teacher) {
         /*
-         * todo: checks, ... 
+         * todo: checks, ...
          */
         teachers.add(teacher);
         teacher.addCourse(this);

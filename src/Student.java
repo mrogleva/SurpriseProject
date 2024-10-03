@@ -10,7 +10,7 @@ public class Student extends Person {
         super(name);
         this.enrolledCourses = new ArrayList<>();
     }
-    
+
     // The same person can have different FNs over time (bachelor, master, PhD)
     // FN is issued from the university and does not come with the person
     public void setFacultyNumber(String facultyNumber) {
@@ -18,7 +18,7 @@ public class Student extends Person {
     }
 
     public void enroll(Course course) {
-        if(enrolledCourses.contains(course)) {
+        if (enrolledCourses.contains(course)) {
             return;
         }
         enrolledCourses.add(course);
@@ -26,14 +26,14 @@ public class Student extends Person {
     }
 
     public void drop(Course course) {
-        if(!enrolledCourses.contains(course)) {
+        if (!enrolledCourses.contains(course)) {
             return;
         }
         enrolledCourses.remove(course);
         course.removeStudent(this);
-        }
+    }
 
     public List<Course> getEnrolledCourses() {
-        return Collections.unmodifiableList(enrolledCourses);    
+        return Collections.unmodifiableList(enrolledCourses);
     }
 }
