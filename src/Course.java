@@ -1,9 +1,9 @@
 import java.util.List;
 import java.util.ArrayList;
-import Exceptions.EnrollmentException;
+import java.util.Collections;
 
 public class Course {
-    private String courseName;
+    public final String courseName;
     private List<Student> enrolledStudents;
     private List<Teacher> teachers;
 
@@ -13,18 +13,25 @@ public class Course {
         this.teachers = new ArrayList<>();
     }
 
-    public boolean enroll(Student student) throws EnrollmentException {
+    public void enroll(Student student) {
         /* Add the student to the list of enrolled students
          * 
          * Here we can do some check if the student is already enrolled, 
          * or if they satisfy some criteria for enrollment
          */
         if (enrolledStudents.contains(student)) {
-            throw new EnrollmentException("Student is already enrolled.");
+            return;
         }
         enrolledStudents.add(student);
         student.enroll(this);
-        return true;
+    }
+
+    public void removeStudent(Student student) {
+        if(!enrolledStudents.contains(student)) {
+            return;
+        }
+        enrolledStudents.remove(student);
+        student.drop(this);
     }
 
     public void addTeacher(Teacher teacher) {
@@ -32,9 +39,14 @@ public class Course {
          * todo: checks, ... 
          */
         teachers.add(teacher);
+        teacher.addCourse(this);
     }
 
     public List<Student> getStudents() {
-        return enrolledStudents;
+        return Collections.unmodifiableList(enrolledStudents);
+    }
+
+    public List<Teacher> getTeachers() {
+        return Collections.unmodifiableList(teachers);
     }
 }

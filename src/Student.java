@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 public class Student extends Person {
     private String facultyNumber;
@@ -17,10 +18,22 @@ public class Student extends Person {
     }
 
     public void enroll(Course course) {
+        if(enrolledCourses.contains(course)) {
+            return;
+        }
         enrolledCourses.add(course);
+        course.enroll(this);
     }
 
+    public void drop(Course course) {
+        if(!enrolledCourses.contains(course)) {
+            return;
+        }
+        enrolledCourses.remove(course);
+        course.removeStudent(this);
+        }
+
     public List<Course> getEnrolledCourses() {
-        return enrolledCourses;
+        return Collections.unmodifiableList(enrolledCourses);    
     }
 }
