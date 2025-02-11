@@ -1,7 +1,6 @@
-# SurpriseProject
-Unknown project. We will see!
+# Mobile bg
+Simple implementation of [Mobile.bg](https://www.mobile.bg/).
 
-[Notes](notes/notes.md)
+[Course notes](notes/notes.md)
 
-## Problem 1 
-susi na java
+
