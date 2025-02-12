@@ -4,12 +4,7 @@ import mobile.listings.Listing;
 import mobile.listings.ListingService;
 import mobile.listings.ListingStorage;
 import mobile.notifications.NotificationService;
-import mobile.vehicles.Car;
-import mobile.vehicles.Truck;
-import mobile.vehicles.Vehicle;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 //public class Main {

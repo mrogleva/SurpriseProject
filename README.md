@@ -1,6 +1,8 @@
 # Mobile bg
 Simple implementation of [Mobile.bg](https://www.mobile.bg/).
 
-[Course notes](notes/notes.md)
+[Course notes.](notes/notes.md)
+
+[Diagrams.](notes/diagrams.md)
 
 
