@@ -37,32 +37,39 @@ import java.util.Scanner;
 //}
 
 public class Main {
+    public static String YES = "yes";
+    public static String NO = "no";
+
     public static void main(String[] args) {
         NotificationService notificationService = new NotificationService();
         ListingStorage listingStorage = new ListingStorage();
         ListingService listingService = new ListingService(listingStorage, notificationService);
 
         Scanner scanner = new Scanner(System.in);
-        int input;
+        int input = -1;
         do {
             System.out.println("Pick an option: ");
             System.out.println("1. Create new listing");
             System.out.println("2. List all vehicles");
             System.out.println("0. Exit");
             System.out.println("\nEnter your choice: ");
-            input = scanner.nextInt();
-            switch (input) {
-                case 1 -> listingService.createListingFromUserInput();
-                case 2 -> {
-                    for (Listing listing : listingService.getListings()) {
-                        System.out.println(listing);
+            try {
+                input = Integer.parseInt(scanner.nextLine());
+                switch (input) {
+                    case 1 -> listingService.createListingFromUserInput(scanner);
+                    case 2 -> {
+                        for (Listing listing : listingService.getListings()) {
+                            System.out.println(listing);
+                        }
                     }
+                    case 0 -> {
+                        System.out.println("Exiting");
+                        return;
+                    }
+                    default -> System.out.println("Invalid option");
                 }
-                case 0 -> {
-                    System.out.println("Exiting");
-                    return;
-                }
-                default -> System.out.println("Invalid option");
+            } catch (Exception e) {
+                System.out.println("Invalid option");
             }
         } while (input != 0);
         scanner.close();

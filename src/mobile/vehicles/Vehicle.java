@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Vehicle {
+    public static final String BRAND = "brand";
+    public static final String MODEL = "model";
+    public static final String COLOR = "color";
+    public static final String YEAR = "year";
+    public static final String CONDITION = "condition";
+
+    public static final String NB_DOORS = "nbOfDoors";
 
     private final Map<String, Object> properties;
     protected final List<String> mandatoryProperties;
@@ -13,7 +20,7 @@ public abstract class Vehicle {
 
     public Vehicle() {
         properties = new HashMap<>();
-        mandatoryProperties = new ArrayList<>(List.of("brand", "model", "isUsed", "yearManufactured", "color"));
+        mandatoryProperties = new ArrayList<>(List.of(BRAND, MODEL, COLOR, YEAR, CONDITION));
         optionalProperties = new ArrayList<>();
     }
 
@@ -21,8 +28,8 @@ public abstract class Vehicle {
         return mandatoryProperties;
     }
 
-    public List<String> getOptionalProperties() {
-        return optionalProperties;
+    public String getOptionalProperties() {
+        return String.join("/", optionalProperties);
     }
 
     public Object getProperty(String propertyName) {
@@ -31,6 +38,10 @@ public abstract class Vehicle {
 
     public void setProperty(String propertyName, Object value) {
         properties.put(propertyName, value);
+    }
+
+    public boolean isValidOptionalProperty(String propertyName) {
+        return optionalProperties.contains(propertyName);
     }
 
     @Override
@@ -42,7 +53,7 @@ public abstract class Vehicle {
             return false;
         }
         Vehicle vehicle = (Vehicle) obj;
-        return properties.equals(vehicle.properties) && mandatoryProperties.equals(vehicle.mandatoryProperties);
+        return properties.equals(vehicle.properties);
     }
 
     @Override

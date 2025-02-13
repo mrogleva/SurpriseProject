@@ -2,6 +2,7 @@ package mobile.notifications;
 
 import mobile.listings.Listing;
 import mobile.search.Filter;
+import mobile.vehicles.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +24,13 @@ public class NotificationService {
                 }
             }
             if (shouldNotify) {
-//                String message = listing.car().brand() + " "
-//                    + listing.car().model() +
-//                    " for " + listing.price();
-//                notificationRule.channel().notify(
-//                    "New car found for you!",
-//                    message
-//                );
+                String message = listing.getVehicle().getProperty(Vehicle.BRAND) + " "
+                    + listing.getVehicle().getProperty(Vehicle.MODEL) +
+                    " for " + listing.getPrice();
+                notificationRule.channel().notify(
+                    "New car found for you!",
+                    message
+                );
             }
         }
     }
