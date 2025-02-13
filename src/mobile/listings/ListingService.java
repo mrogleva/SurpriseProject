@@ -1,6 +1,7 @@
 package mobile.listings;
 
 import mobile.notifications.NotificationService;
+import mobile.validation.UserInputValidator;
 import mobile.vehicles.Vehicle;
 
 import java.util.List;
@@ -63,25 +64,16 @@ public class ListingService {
         System.out.println("Enter listing description: ");
         String description = scanner.nextLine();
 
-        // TODO: add validation for properties based on class
         for (String property : vehicle.getMandatoryProperties()) {
-            String value;
-            do {
-                System.out.println("Enter " + property + ":");
-                value = scanner.nextLine();
-                if (value.isEmpty()) {
-                    System.out.println("Please enter a value");
-                }
-            } while (value.isEmpty());
-            vehicle.setProperty(property, value);
+            setVehiclePropertyFromUserInput(scanner, property, vehicle);
         }
 
         System.out.println("You have entered all of the mandatory properties.");
 
         if (!vehicle.getOptionalProperties().isEmpty()) {
-            System.out.println("Do you wish to enter any optional property? (yes/no)");
             String answer;
             do {
+                System.out.println("Do you wish to enter any optional property? (yes/no)");
                 answer = scanner.nextLine();
                 if (YES.equals(answer)) {
                     System.out.println("Select a property you wish to add (" + vehicle.getOptionalProperties() + "). Enter 'no' if you don't wish to select a property.");
@@ -89,8 +81,7 @@ public class ListingService {
                     if (NO.equals(property)) {
                         answer = NO;
                     } else if (vehicle.isValidOptionalProperty(property)) {
-                        System.out.println("Enter " + property + ":");
-                        vehicle.setProperty(property, scanner.nextLine());
+                        setVehiclePropertyFromUserInput(scanner, property, vehicle);
                     } else {
                         System.out.println("Invalid property");
                     }
@@ -106,5 +97,27 @@ public class ListingService {
         System.out.println("Listing created successfully!");
 
         notificationService.onNewListingAdded(listing);
+    }
+
+    private static void setVehiclePropertyFromUserInput(Scanner scanner, String property, Vehicle vehicle) {
+        do {
+            Class<?> propertyType = vehicle.getPropertyType(property);
+            if (Boolean.class == propertyType) {
+                System.out.println("Enter " + property + " (true/false):");
+            } else {
+                System.out.println("Enter " + property + ":");
+            }
+            String value = scanner.nextLine();
+            if (value.isEmpty()) {
+                System.out.println("Please enter a value");
+            } else {
+                try {
+                    vehicle.setProperty(property, UserInputValidator.castUserInput(value, propertyType));
+                    return;
+                } catch (Exception e) {
+                    System.out.println("Invalid value");
+                }
+            }
+        } while (true);
     }
 }

@@ -2,6 +2,7 @@ package mobile.search;
 
 import mobile.listings.Listing;
 import mobile.listings.ListingCategory;
+import mobile.validation.UserInputValidator;
 import mobile.vehicles.Vehicle;
 
 import java.util.ArrayList;
@@ -103,14 +104,14 @@ public class FilterBuilder {
                     }
                     case EXACT -> {
                         System.out.println("Enter " + property + ":");
-                        V value = castUserInput(scanner.nextLine(), propertyType);
+                        V value = UserInputValidator.castUserInput(scanner.nextLine(), propertyType);
                         return new ExactValueFilter<>(fieldExtractor, value);
                     }
                     case RANGE -> {
                         System.out.println("Enter " + property + " range start:");
-                        V start = castUserInput(scanner.nextLine(), propertyType);
+                        V start = UserInputValidator.castUserInput(scanner.nextLine(), propertyType);
                         System.out.println("Enter " + property + " range end:");
-                        V end = castUserInput(scanner.nextLine(), propertyType);
+                        V end = UserInputValidator.castUserInput(scanner.nextLine(), propertyType);
                         return new RangeFilter<>(fieldExtractor, start, end);
                     }
                     default -> {
@@ -121,19 +122,5 @@ public class FilterBuilder {
                 System.out.println("Invalid value for " + property);
             }
         } while (true);
-    }
-
-    private static <V> V castUserInput(String input, Class<?> propertyType) {
-        if (propertyType == String.class) {
-            return (V) input;
-        } else if (propertyType == Integer.class) {
-            return (V) Integer.valueOf(input);
-        } else if (propertyType == Double.class) {
-            return (V) Double.valueOf(input);
-        } else if (propertyType == Boolean.class) {
-            return (V) Boolean.valueOf(input);
-        } else {
-            throw new IllegalArgumentException();
-        }
     }
 }
