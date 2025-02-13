@@ -1,9 +1,8 @@
 package mobile.vehicles;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import mobile.listings.ListingCategory;
+
+import java.util.*;
 
 public abstract class Vehicle {
     public static final String BRAND = "brand";
@@ -12,36 +11,63 @@ public abstract class Vehicle {
     public static final String YEAR = "year";
     public static final String CONDITION = "condition";
 
+    public static final String MANDATORY_PROPERTIES = BRAND + "/" + MODEL + "/" + COLOR + "/" + YEAR + "/" + CONDITION;
+
     public static final String NB_DOORS = "nbOfDoors";
+    public static final String FUEL_TYPE = "fuelType";
 
     private final Map<String, Object> properties;
-    protected final List<String> mandatoryProperties;
-    protected final List<String> optionalProperties;
+
+    protected final Map<String, Class<?>> mandatoryProperties;
+    protected final Map<String, Class<?>> optionalProperties;
+
+    public static Vehicle getVehicleFromListingCategory(ListingCategory category) {
+        return switch (category) {
+            case CAR -> new Car();
+            case TRUCK -> new Truck();
+        };
+    }
 
     public Vehicle() {
         properties = new HashMap<>();
-        mandatoryProperties = new ArrayList<>(List.of(BRAND, MODEL, COLOR, YEAR, CONDITION));
-        optionalProperties = new ArrayList<>();
+        mandatoryProperties = new HashMap<>(Map.of(
+                BRAND, String.class,
+                MODEL, String.class,
+                COLOR, String.class,
+                YEAR, Integer.class,
+                CONDITION, String.class
+        ));
+        optionalProperties = new HashMap<>(Map.of(
+                FUEL_TYPE, String.class
+        ));
     }
 
-    public List<String> getMandatoryProperties() {
-        return mandatoryProperties;
+    public Set<String> getMandatoryProperties() {
+        return mandatoryProperties.keySet();
     }
 
     public String getOptionalProperties() {
-        return String.join("/", optionalProperties);
+        return String.join("/", optionalProperties.keySet());
     }
 
-    public Object getProperty(String propertyName) {
-        return properties.get(propertyName);
+    public <V> V getProperty(String propertyName) {
+        return (V) properties.get(propertyName);
     }
 
     public void setProperty(String propertyName, Object value) {
         properties.put(propertyName, value);
     }
 
+    public boolean isValidMandatoryProperty(String propertyName) {
+        return mandatoryProperties.containsKey(propertyName);
+    }
+
     public boolean isValidOptionalProperty(String propertyName) {
-        return optionalProperties.contains(propertyName);
+        return optionalProperties.containsKey(propertyName);
+    }
+
+    public Class<?> getPropertyType(String propertyName) {
+        return mandatoryProperties.getOrDefault(propertyName, optionalProperties.get(propertyName));
     }
 
     @Override

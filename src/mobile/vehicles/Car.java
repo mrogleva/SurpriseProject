@@ -1,12 +1,16 @@
 package mobile.vehicles;
 
-import java.util.List;
+import java.util.Map;
 
 public class Car extends Vehicle {
-    public static final String HEATED_SEATS = "heated seats included";
+    // Optional properties
+    public static final String HEATED_SEATS = "heatedSeats";
 
     public Car() {
         super();
-        this.optionalProperties.addAll(List.of(NB_DOORS, HEATED_SEATS));
+        this.optionalProperties.putAll(Map.of(
+                NB_DOORS, Integer.class,
+                HEATED_SEATS, Boolean.class
+        ));
     }
 }

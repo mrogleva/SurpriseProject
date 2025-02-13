@@ -1,12 +1,16 @@
 package mobile.vehicles;
 
-import java.util.List;
+import java.util.Map;
 
 public class Truck extends Vehicle {
-    public static final String TRAILER = "trailer included";
+    // Optional properties
+    public static final String TRAILER = "hasTrailer";
 
     public Truck() {
         super();
-        this.optionalProperties.addAll(List.of(NB_DOORS, TRAILER));
+        this.optionalProperties.putAll(Map.of(
+                NB_DOORS, Integer.class,
+                TRAILER, Boolean.class
+        ));
     }
 }

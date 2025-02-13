@@ -3,37 +3,44 @@ package mobile.listings;
 import mobile.vehicles.Vehicle;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
 
 public class Listing {
-    private final Vehicle vehicle;
+    private final ListingCategory category;
     private final String title;
-    private final double price;
+    private final Double price;
     private final String description;
+    private final Vehicle vehicle;
     private final LocalDateTime createdDate;
 
-    public Listing(Vehicle vehicle, String title, double price, String description) {
-        this.vehicle = vehicle;
+    public Listing(ListingCategory category, String title, Double price, String description, Vehicle vehicle) {
+        this.category = category;
         this.title = title;
         this.price = price;
         this.description = description;
+        this.vehicle = vehicle;
         createdDate = LocalDateTime.now();
     }
 
-    public Vehicle getVehicle() {
-        return vehicle;
+    public ListingCategory getCategory() {
+        return category;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
     public LocalDateTime getCreatedDate() {

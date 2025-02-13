@@ -1,8 +1,6 @@
 package mobile.listings;
 
 import mobile.notifications.NotificationService;
-import mobile.vehicles.Car;
-import mobile.vehicles.Truck;
 import mobile.vehicles.Vehicle;
 
 import java.util.List;
@@ -20,11 +18,6 @@ public class ListingService {
         this.notificationService = notificationService;
     }
 
-    public void addListing(Listing listing) {
-        listingStorage.addListing(listing);
-        notificationService.onNewListingAdded(listing);
-    }
-
     public List<Listing> getListings() {
         return listingStorage.getListings();
     }
@@ -32,23 +25,20 @@ public class ListingService {
     public void createListingFromUserInput(Scanner scanner) {
         String title;
         do {
-            System.out.println("Enter listing title: ");
+            System.out.println("Enter listing title:");
             title = scanner.nextLine();
             if (title.isEmpty()) {
                 System.out.println("Please enter a title");
             }
         } while (title.isEmpty());
 
+        ListingCategory category;
         Vehicle vehicle;
         do {
-            System.out.println("Select listing category (" + ListingCategory.getListingCategories() + "): ");
+            System.out.println("Select listing category (" + ListingCategory.getListingCategories() + "):");
             try {
-                ListingCategory category = ListingCategory.fromString(scanner.nextLine());
-                switch (category) {
-                    case CAR -> vehicle = new Car();
-                    case TRUCK -> vehicle = new Truck();
-                    default -> throw new IllegalArgumentException();
-                }
+                category = ListingCategory.fromString(scanner.nextLine());
+                vehicle = Vehicle.getVehicleFromListingCategory(category);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid category");
@@ -57,7 +47,7 @@ public class ListingService {
 
         double price;
         do {
-            System.out.println("Enter listing price: ");
+            System.out.println("Enter listing price:");
             try {
                 price = Double.parseDouble(scanner.nextLine());
                 if (price <= 0.0d) {
@@ -73,10 +63,11 @@ public class ListingService {
         System.out.println("Enter listing description: ");
         String description = scanner.nextLine();
 
+        // TODO: add validation for properties based on class
         for (String property : vehicle.getMandatoryProperties()) {
             String value;
             do {
-                System.out.println("Enter " + property + ": ");
+                System.out.println("Enter " + property + ":");
                 value = scanner.nextLine();
                 if (value.isEmpty()) {
                     System.out.println("Please enter a value");
@@ -93,12 +84,12 @@ public class ListingService {
             do {
                 answer = scanner.nextLine();
                 if (YES.equals(answer)) {
-                    System.out.println("Select a property you wish to add (" + vehicle.getOptionalProperties() + "). Enter 'no' if you don't wish to select a property. ");
+                    System.out.println("Select a property you wish to add (" + vehicle.getOptionalProperties() + "). Enter 'no' if you don't wish to select a property.");
                     String property = scanner.nextLine();
                     if (NO.equals(property)) {
                         answer = NO;
                     } else if (vehicle.isValidOptionalProperty(property)) {
-                        System.out.println("Enter " + property + ": ");
+                        System.out.println("Enter " + property + ":");
                         vehicle.setProperty(property, scanner.nextLine());
                     } else {
                         System.out.println("Invalid property");
@@ -109,7 +100,7 @@ public class ListingService {
             } while (!NO.equals(answer));
         }
 
-        Listing listing = new Listing(vehicle, title, price, description);
+        Listing listing = new Listing(category, title, price, description, vehicle);
         listingStorage.addListing(listing);
 
         System.out.println("Listing created successfully!");
