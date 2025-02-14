@@ -51,6 +51,11 @@ public abstract class Vehicle {
         return String.join("/", optionalPropertiesTypes.keySet());
     }
 
+    // TODO: rename
+    public List<String> getOptionalPropertiesTypesList() {
+        return new ArrayList<>(optionalPropertiesTypes.keySet());
+    }
+
     public <V> V getProperty(String propertyName) {
         return (V) propertiesValues.get(propertyName);
     }

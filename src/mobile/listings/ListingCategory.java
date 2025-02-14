@@ -1,5 +1,6 @@
 package mobile.listings;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,5 +13,10 @@ public enum ListingCategory {
 
     public static ListingCategory fromString(String category) {
         return ListingCategory.valueOf(category.toUpperCase());
+    }
+
+    // TODO: rename to old one
+    public static String[] getListingCategoriesNames() {
+        return Stream.of(ListingCategory.values()).map(Enum::name).toArray(String[]::new);
     }
 }

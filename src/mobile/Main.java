@@ -1,5 +1,6 @@
 package mobile;
 
+import mobile.cmd.UserInputHandler;
 import mobile.listings.Listing;
 import mobile.listings.ListingCategory;
 import mobile.listings.ListingService;
@@ -23,10 +24,11 @@ public class Main {
         ListingStorage listingStorage = new ListingStorage();
         ListingService listingService = new ListingService(listingStorage, notificationService);
 
+        UserInputHandler handler = new UserInputHandler();
+
         // Fill some initial listings
         initListings(listingStorage);
 
-        Scanner scanner = new Scanner(System.in);
         int input = -1;
         do {
             System.out.println("Pick an option:");
@@ -34,18 +36,18 @@ public class Main {
             System.out.println("2. List all vehicles");
             System.out.println("3. Search for vehicles");
             System.out.println("0. Exit");
-            System.out.println("\nEnter your choice:");
             try {
-                input = Integer.parseInt(scanner.nextLine());
+                input = Integer.parseInt(handler.getInputRequireNonEmpty("option"));
                 switch (input) {
-                    case 1 -> listingService.createListingFromUserInput(scanner);
+                    case 1 -> listingService.createListingFromUserInput(handler);
                     case 2 -> {
                         for (Listing listing : listingService.getListings()) {
                             System.out.println(listing);
                         }
                     }
                     case 3 -> {
-                        List<Filter<Listing>> filters = FilterBuilder.buildSearchFromUserInput(scanner);
+                        // TODO: fix
+                        List<Filter<Listing>> filters = FilterBuilder.buildSearchFromUserInput(handler.getScanner());
                         List<Listing> searchResults = Searcher.search(listingService.getListings(), filters);
                         for (Listing listing : searchResults) {
                             System.out.println(listing);
@@ -61,7 +63,7 @@ public class Main {
                 System.out.println("Invalid option");
             }
         } while (input != 0);
-        scanner.close();
+        handler.exit();
     }
 
     private static void initListings(ListingStorage listingStorage) {

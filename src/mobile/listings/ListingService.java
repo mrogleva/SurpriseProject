@@ -1,5 +1,6 @@
 package mobile.listings;
 
+import mobile.cmd.UserInputHandler;
 import mobile.notifications.NotificationService;
 import mobile.vehicles.Vehicle;
 
@@ -20,6 +21,53 @@ public class ListingService {
 
     public List<Listing> getListings() {
         return listingStorage.getListings();
+    }
+
+    public void createListingFromUserInput(UserInputHandler handler) {
+        String title = handler.getInputRequireNonEmpty("title");
+
+        String category = handler.getInputFromOptions("category", ListingCategory.getListingCategoriesNames());
+        ListingCategory listingCategory = ListingCategory.fromString(category);
+        Vehicle vehicle = Vehicle.getVehicleFromListingCategory(listingCategory);
+
+        double price;
+        do {
+            try {
+                price = Double.parseDouble(handler.getInputRequireNonEmpty("price"));
+                if (price <= 0.0d) {
+                    System.out.println("Please enter a positive price");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price");
+            }
+        } while (true);
+
+        String description = handler.getInputRequireNonEmpty("description");
+
+        for (String property : vehicle.getMandatoryPropertiesTypes()) {
+            setVehiclePropertyFromUserInput(handler, property, vehicle);
+        }
+
+        System.out.println("You have entered all of the mandatory properties.");
+
+        if (!vehicle.getOptionalPropertiesTypes().isEmpty()) {
+            do {
+                String property = handler.getInputWithFromOptionsSkipable(
+                        "Select an optional property you wish to add.",
+                        vehicle.getOptionalPropertiesTypesList().toArray(String[]::new));
+                if (property == null) {
+                    break;
+                }
+                setVehiclePropertyFromUserInput(handler, property, vehicle);
+            } while (true);
+        }
+
+        Listing listing = new Listing(listingCategory, title, price, description, vehicle);
+        listingStorage.addListing(listing);
+        System.out.println("\nListing created successfully!\n");
+        notificationService.onNewListingAdded(listing);
     }
 
     public void createListingFromUserInput(Scanner scanner) {
@@ -116,6 +164,24 @@ public class ListingService {
                 } catch (Exception e) {
                     System.out.println("Invalid value");
                 }
+            }
+        } while (true);
+    }
+
+    private static void setVehiclePropertyFromUserInput(UserInputHandler handler, String property, Vehicle vehicle) {
+        do {
+            Class<?> propertyType = vehicle.getPropertyType(property);
+            String value;
+            if (Boolean.class == propertyType) {
+                value = handler.getInputFromOptions(property, "true", "false");
+            } else {
+                value = handler.getInputRequireNonEmpty(property);
+            }
+            try {
+                vehicle.setProperty(property, value);
+                return;
+            } catch (Exception e) {
+                System.out.println("Invalid value");
             }
         } while (true);
     }
