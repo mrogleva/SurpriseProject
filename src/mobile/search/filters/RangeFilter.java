@@ -1,4 +1,6 @@
-package mobile.search;
+package mobile.search.filters;
+
+import mobile.search.FieldExtractor;
 
 public class RangeFilter<T, V extends Comparable<V>> implements Filter<T> {
     private final FieldExtractor<T, V> fieldExtractor;

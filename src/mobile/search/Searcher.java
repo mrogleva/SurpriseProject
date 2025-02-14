@@ -1,7 +1,7 @@
-package mobile.parser;
+package mobile.search;
 
 import mobile.listings.Listing;
-import mobile.search.Filter;
+import mobile.search.filters.Filter;
 
 import java.util.ArrayList;
 import java.util.List;

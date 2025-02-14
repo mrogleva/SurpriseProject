@@ -1,4 +1,6 @@
-package mobile.search;
+package mobile.search.filters;
+
+import mobile.search.FieldExtractor;
 
 public class CaseInsensitiveFilter<T> implements Filter<T> {
     private final String valueToFind;

@@ -17,10 +17,10 @@ public abstract class Vehicle {
     public static final String NB_DOORS = "nbOfDoors";
     public static final String FUEL_TYPE = "fuelType";
 
-    private final Map<String, Object> properties;
+    private final Map<String, Object> propertiesValues;
 
-    protected final Map<String, Class<?>> mandatoryProperties;
-    protected final Map<String, Class<?>> optionalProperties;
+    protected final Map<String, Class<?>> mandatoryPropertiesTypes;
+    protected final Map<String, Class<?>> optionalPropertiesTypes;
 
     public static Vehicle getVehicleFromListingCategory(ListingCategory category) {
         return switch (category) {
@@ -30,46 +30,46 @@ public abstract class Vehicle {
     }
 
     public Vehicle() {
-        properties = new HashMap<>();
-        mandatoryProperties = new HashMap<>(Map.of(
+        propertiesValues = new HashMap<>();
+        mandatoryPropertiesTypes = new HashMap<>(Map.of(
                 BRAND, String.class,
                 MODEL, String.class,
                 COLOR, String.class,
                 YEAR, Integer.class,
                 CONDITION, String.class
         ));
-        optionalProperties = new HashMap<>(Map.of(
+        optionalPropertiesTypes = new HashMap<>(Map.of(
                 FUEL_TYPE, String.class
         ));
     }
 
-    public Set<String> getMandatoryProperties() {
-        return mandatoryProperties.keySet();
+    public Set<String> getMandatoryPropertiesTypes() {
+        return mandatoryPropertiesTypes.keySet();
     }
 
-    public String getOptionalProperties() {
-        return String.join("/", optionalProperties.keySet());
+    public String getOptionalPropertiesTypes() {
+        return String.join("/", optionalPropertiesTypes.keySet());
     }
 
     public <V> V getProperty(String propertyName) {
-        return (V) properties.get(propertyName);
+        return (V) propertiesValues.get(propertyName);
     }
 
     public void setProperty(String propertyName, String value) throws IllegalArgumentException{
         Object correctTypeValue = castPropertyValue(propertyName, value);
-        properties.put(propertyName, correctTypeValue);
+        propertiesValues.put(propertyName, correctTypeValue);
     }
 
     public boolean isValidMandatoryProperty(String propertyName) {
-        return mandatoryProperties.containsKey(propertyName);
+        return mandatoryPropertiesTypes.containsKey(propertyName);
     }
 
     public boolean isValidOptionalProperty(String propertyName) {
-        return optionalProperties.containsKey(propertyName);
+        return optionalPropertiesTypes.containsKey(propertyName);
     }
 
     public Class<?> getPropertyType(String propertyName) {
-        return mandatoryProperties.getOrDefault(propertyName, optionalProperties.get(propertyName));
+        return mandatoryPropertiesTypes.getOrDefault(propertyName, optionalPropertiesTypes.get(propertyName));
     }
 
     @Override
@@ -81,17 +81,17 @@ public abstract class Vehicle {
             return false;
         }
         Vehicle vehicle = (Vehicle) obj;
-        return properties.equals(vehicle.properties);
+        return propertiesValues.equals(vehicle.propertiesValues);
     }
 
     @Override
     public String toString() {
         String[] className = this.getClass().getName().split("\\.");
         String result = className[className.length - 1] + "{";
-        for (String property : properties.keySet()) {
-            result += property + "=" + properties.get(property) + ", ";
+        for (String property : propertiesValues.keySet()) {
+            result += property + "=" + propertiesValues.get(property) + ", ";
         }
-        if (!properties.isEmpty()) {
+        if (!propertiesValues.isEmpty()) {
             result = result.substring(0, result.length() - 2);
         }
         return result + "}";

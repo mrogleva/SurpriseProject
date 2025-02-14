@@ -1,4 +1,4 @@
-package mobile.search;
+package mobile.search.filters;
 
 public enum FilterType {
     CASE_INSENSITIVE, EXACT, RANGE;

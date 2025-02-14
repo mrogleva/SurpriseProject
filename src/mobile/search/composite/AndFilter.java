@@ -1,6 +1,6 @@
 package mobile.search.composite;
 
-import mobile.search.Filter;
+import mobile.search.filters.Filter;
 
 public class AndFilter<T> implements Filter<T>{
     private final Filter<T> left;

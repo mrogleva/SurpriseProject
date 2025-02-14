@@ -1,4 +1,6 @@
-package mobile.search;
+package mobile.search.filters;
+
+import mobile.search.FieldExtractor;
 
 public class ExactValueFilter<T, V> implements Filter<T> {
     private final V valueToFind;

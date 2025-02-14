@@ -2,6 +2,7 @@ package mobile.search;
 
 import mobile.listings.Listing;
 import mobile.listings.ListingCategory;
+import mobile.search.filters.*;
 import mobile.validation.UserInputValidator;
 import mobile.vehicles.Vehicle;
 
@@ -47,7 +48,7 @@ public class FilterBuilder {
         do {
             System.out.println("Do you wish to filter by anything else?");
             System.out.println("Commonly used filters are " + Vehicle.MANDATORY_PROPERTIES);
-            System.out.println("Other possible filters are " + dummyVehicle.getOptionalProperties());
+            System.out.println("Other possible filters are " + dummyVehicle.getOptionalPropertiesTypes());
             System.out.println("Enter 'no' to finish filtering");
             System.out.println("\nEnter your choice:");
             property = scanner.nextLine();

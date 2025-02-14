@@ -8,7 +8,7 @@ public class Car extends Vehicle {
 
     public Car() {
         super();
-        this.optionalProperties.putAll(Map.of(
+        this.optionalPropertiesTypes.putAll(Map.of(
                 NB_DOORS, Integer.class,
                 HEATED_SEATS, Boolean.class
         ));

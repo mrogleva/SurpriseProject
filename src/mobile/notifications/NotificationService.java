@@ -1,7 +1,7 @@
 package mobile.notifications;
 
 import mobile.listings.Listing;
-import mobile.search.Filter;
+import mobile.search.filters.Filter;
 import mobile.vehicles.Vehicle;
 
 import java.util.ArrayList;

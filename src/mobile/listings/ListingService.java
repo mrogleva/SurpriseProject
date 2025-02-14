@@ -1,7 +1,6 @@
 package mobile.listings;
 
 import mobile.notifications.NotificationService;
-import mobile.validation.UserInputValidator;
 import mobile.vehicles.Vehicle;
 
 import java.util.List;
@@ -64,19 +63,19 @@ public class ListingService {
         System.out.println("Enter listing description: ");
         String description = scanner.nextLine();
 
-        for (String property : vehicle.getMandatoryProperties()) {
+        for (String property : vehicle.getMandatoryPropertiesTypes()) {
             setVehiclePropertyFromUserInput(scanner, property, vehicle);
         }
 
         System.out.println("You have entered all of the mandatory properties.");
 
-        if (!vehicle.getOptionalProperties().isEmpty()) {
+        if (!vehicle.getOptionalPropertiesTypes().isEmpty()) {
             String answer;
             do {
                 System.out.println("Do you wish to enter any optional property? (yes/no)");
                 answer = scanner.nextLine();
                 if (YES.equals(answer)) {
-                    System.out.println("Select a property you wish to add (" + vehicle.getOptionalProperties() + "). Enter 'no' if you don't wish to select a property.");
+                    System.out.println("Select a property you wish to add (" + vehicle.getOptionalPropertiesTypes() + "). Enter 'no' if you don't wish to select a property.");
                     String property = scanner.nextLine();
                     if (NO.equals(property)) {
                         answer = NO;
@@ -93,9 +92,9 @@ public class ListingService {
 
         Listing listing = new Listing(category, title, price, description, vehicle);
         listingStorage.addListing(listing);
-
+        System.out.println();
         System.out.println("Listing created successfully!");
-
+        System.out.println();
         notificationService.onNewListingAdded(listing);
     }
 
