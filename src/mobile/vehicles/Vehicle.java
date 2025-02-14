@@ -1,6 +1,7 @@
 package mobile.vehicles;
 
 import mobile.listings.ListingCategory;
+import mobile.validation.UserInputValidator;
 
 import java.util.*;
 
@@ -54,8 +55,9 @@ public abstract class Vehicle {
         return (V) properties.get(propertyName);
     }
 
-    public void setProperty(String propertyName, Object value) {
-        properties.put(propertyName, value);
+    public void setProperty(String propertyName, String value) throws IllegalArgumentException{
+        Object correctTypeValue = castPropertyValue(propertyName, value);
+        properties.put(propertyName, correctTypeValue);
     }
 
     public boolean isValidMandatoryProperty(String propertyName) {
@@ -93,5 +95,9 @@ public abstract class Vehicle {
             result = result.substring(0, result.length() - 2);
         }
         return result + "}";
+    }
+
+    public <V> V castPropertyValue(String propertyName, String value) {
+        return UserInputValidator.castUserInput(value, getPropertyType(propertyName));
     }
 }

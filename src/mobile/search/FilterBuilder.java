@@ -26,16 +26,24 @@ public class FilterBuilder {
             }
         } while (true);
         filters.add(new ExactValueFilter<>(Listing::getCategory, category));
+        // Create dummy vehicle from the correct type
+        Vehicle dummyVehicle = Vehicle.getVehicleFromListingCategory(category);
 
         System.out.println("Do you wish to filter results by price?");
         String property = "price";
-        RangeType rangeType = getRangeTypeFromUserInput(scanner, property, Double.class);
-        Filter<Listing> filter = getFilterFromRange(scanner, property, Double.class, rangeType, Listing::getPrice);
+        String availableFilterTypes = FilterType.getFilterTypes(Double.class);
+        FilterType filterType = null;
+        if(availableFilterTypes.contains("/")) {
+            filterType = getFilterTypeFromUserInput(scanner, property, Double.class);
+        }
+        else if (!availableFilterTypes.isEmpty()) {
+            filterType = FilterType.fromString(availableFilterTypes);
+        }
+        Filter<Listing> filter = getFilterFromRange(scanner, property, Double.class, filterType, Listing::getPrice);
         if (filter != null) {
             filters.add(filter);
         }
 
-        Vehicle dummyVehicle = Vehicle.getVehicleFromListingCategory(category);
         do {
             System.out.println("Do you wish to filter by anything else?");
             System.out.println("Commonly used filters are " + Vehicle.MANDATORY_PROPERTIES);
@@ -48,9 +56,16 @@ public class FilterBuilder {
             }
             if (dummyVehicle.isValidMandatoryProperty(property) || dummyVehicle.isValidOptionalProperty(property)) {
                 Class<?> propertyType = dummyVehicle.getPropertyType(property);
-                rangeType = getRangeTypeFromUserInput(scanner, property, propertyType);
+                filterType = null;
+                availableFilterTypes = FilterType.getFilterTypes(propertyType);
+                if(availableFilterTypes.contains("/")) {
+                    filterType = getFilterTypeFromUserInput(scanner, property, propertyType);
+                }
+                else if (!availableFilterTypes.isEmpty()) {
+                    filterType = FilterType.fromString(availableFilterTypes);
+                }
                 String finalProperty = property;
-                filter = getFilterFromRange(scanner, property, propertyType, rangeType, listing -> listing.getVehicle().getProperty(finalProperty));
+                filter = getFilterFromRange(scanner, property, propertyType, filterType, listing -> listing.getVehicle().getProperty(finalProperty));
                 if (filter != null) {
                     filters.add(filter);
                 }
@@ -62,21 +77,21 @@ public class FilterBuilder {
         return filters;
     }
 
-    private static RangeType getRangeTypeFromUserInput(Scanner scanner, String property, Class<?> propertyType) {
+    private static FilterType getFilterTypeFromUserInput(Scanner scanner, String property, Class<?> propertyType) {
         do {
-            String availableRangeTypes = RangeType.getRanges(propertyType);
-            if (availableRangeTypes.isEmpty()) {
+            String availableFilterTypes = FilterType.getFilterTypes(propertyType);
+            if (availableFilterTypes.isEmpty()) {
                 break;
             }
-            System.out.println("If you wish to filter by " + property + " , please select one of " + availableRangeTypes + ". Otherwise, enter 'no'.");
+            System.out.println("If you wish to filter by " + property + " , please select one of " + availableFilterTypes + ". Otherwise, enter 'no'.");
             String answer = scanner.nextLine();
             if (NO.equals(answer)) {
                 break;
             }
             try {
-                RangeType rangeType = RangeType.fromString(answer);
-                if (RangeType.isRangeTypeValidForPropertyType(rangeType, propertyType)) {
-                    return rangeType;
+                FilterType filterType = FilterType.fromString(answer);
+                if (FilterType.isRangeTypeValidForPropertyType(filterType, propertyType)) {
+                    return filterType;
                 }
             } catch (IllegalArgumentException e) {
                 // ignore
@@ -89,14 +104,14 @@ public class FilterBuilder {
     private static <V extends Comparable<V>> Filter<Listing> getFilterFromRange(Scanner scanner,
                                                                                 String property,
                                                                                 Class<?> propertyType,
-                                                                                RangeType rangeType,
+                                                                                FilterType filterType,
                                                                                 FieldExtractor<Listing, V> fieldExtractor) {
-        if (rangeType == null) {
+        if (filterType == null) {
             return null;
         }
         do {
             try {
-                switch (rangeType) {
+                switch (filterType) {
                     case CASE_INSENSITIVE -> {
                         System.out.println("Enter " + property + ":");
                         String value = scanner.nextLine();

@@ -69,20 +69,20 @@ public class Main {
         civic.setProperty(Vehicle.BRAND, "Honda");
         civic.setProperty(Vehicle.MODEL, "Civic");
         civic.setProperty(Vehicle.COLOR, "Black");
-        civic.setProperty(Vehicle.YEAR, 2022);
+        civic.setProperty(Vehicle.YEAR, "2022");
         civic.setProperty(Vehicle.CONDITION, "Used");
-        civic.setProperty(Vehicle.NB_DOORS, 5);
-        civic.setProperty(Car.HEATED_SEATS, true);
+        civic.setProperty(Vehicle.NB_DOORS, "5");
+        civic.setProperty(Car.HEATED_SEATS, "true");
         Listing civicListing = new Listing(ListingCategory.CAR, "Honda Civic", 36000d, "Great car", civic);
 
         Car hrv = new Car();
         hrv.setProperty(Vehicle.BRAND, "Honda");
         hrv.setProperty(Vehicle.MODEL, "HRV");
         hrv.setProperty(Vehicle.COLOR, "White");
-        hrv.setProperty(Vehicle.YEAR, 2016);
+        hrv.setProperty(Vehicle.YEAR, "2016");
         hrv.setProperty(Vehicle.CONDITION, "New");
-        hrv.setProperty(Vehicle.NB_DOORS, 5);
-        hrv.setProperty(Car.HEATED_SEATS, true);
+        hrv.setProperty(Vehicle.NB_DOORS, "5");
+        hrv.setProperty(Car.HEATED_SEATS, "true");
         Listing hrvListing = new Listing(ListingCategory.CAR, "Honda HRV", 23000d, "Great car", hrv);
 
         listingStorage.addListing(civicListing);

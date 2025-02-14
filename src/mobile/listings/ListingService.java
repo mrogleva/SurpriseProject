@@ -112,7 +112,7 @@ public class ListingService {
                 System.out.println("Please enter a value");
             } else {
                 try {
-                    vehicle.setProperty(property, UserInputValidator.castUserInput(value, propertyType));
+                    vehicle.setProperty(property, value);
                     return;
                 } catch (Exception e) {
                     System.out.println("Invalid value");
